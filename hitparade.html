@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI-HITPARADE</title>
+  <title>AI-MUSICWORLD</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
       background-color: #0A0A0A;
       color: #FFFFFF;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
       text-align: center;
     }
     nav {
@@ -21,136 +25,211 @@
       box-shadow: 0 2px 5px #000;
       z-index: 1000;
     }
-    nav a {
-      margin: 0 15px;
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+    nav ul li a {
       color: #FF00FF;
       text-decoration: none;
       font-weight: bold;
+      transition: color 0.3s;
     }
-    nav a:hover {
+    nav ul li a:hover {
       color: #00FFFF;
     }
     header {
-      padding: 100px 20px 20px;
-      font-size: 2.5em;
+      padding: 80px 20px 20px 20px;
+      font-size: 2em;
       color: #FF00FF;
     }
-    section {
-      max-width: 1000px;
+    .video-section, .song-section, .hitparade-wrapper, .media-box {
       margin: 40px auto;
+      width: 80%;
+      background: #1a1a1a;
       padding: 20px;
-      background-color: #1a1a1a;
       border-radius: 10px;
       box-shadow: 0 0 10px #00FFFF;
-    }
-    section h2 {
-      color: #00FFFF;
-      margin-bottom: 20px;
+      text-align: left;
     }
     video, audio {
       width: 100%;
-      max-width: 800px;
-      border-radius: 10px;
-      box-shadow: 0 0 8px #00FFFF;
+      margin-bottom: 10px;
+      text-align: center;
     }
-    .rating, .upload, .selection, .scrollbox {
-      margin-top: 20px;
-    }
-    .scrollbox {
-      max-height: 300px;
-      overflow-y: auto;
-      background-color: #111;
+    select, button, input[type="file"] {
+      margin: 10px 0;
       padding: 10px;
-      border: 1px solid #444;
-      border-radius: 8px;
-      margin-bottom: 20px;
+      border: none;
+      border-radius: 5px;
     }
-    .top10 {
+    select {
+      width: 200px;
+    }
+    input[type="file"] {
+      width: auto;
+    }
+    button {
+      background-color: #FF00FF;
+      color: #fff;
+      cursor: pointer;
+      width: 200px;
+    }
+    button:hover {
+      background-color: #cc00cc;
+    }
+    .hitparade-wrapper {
+      transform: translateX(2px);
+    }
+    .hitparade {
       display: flex;
-      justify-content: space-around;
-      gap: 40px;
-      flex-wrap: wrap;
-    }
-    .top10 div {
-      width: 45%;
-    }
-    table {
+      justify-content: center;
+      gap: 8px;
       width: 100%;
-      border-collapse: collapse;
+      text-align: center;
     }
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #333;
+    .hitbox {
+      width: 398px;
     }
-    th {
+    .hitlist {
+      width: 100%;
+      max-height: 400px;
+      overflow-y: scroll;
+      background: #0A0A0A;
+      border: 1px solid #00FFFF;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    .media-box h3 {
+      color: #00FFFF;
+      text-align: center;
+    }
+    .media-box p {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .media-box a {
       color: #FF00FF;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .media-logos {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .media-logo-placeholder {
+      flex: 1 1 22%;
+      height: 120px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .media-logo-placeholder img {
+      max-width: 90%;
+      max-height: 80%;
+      object-fit: contain;
     }
     footer {
-      margin: 40px 0 20px;
-      color: #999;
+      margin: 50px 0 20px 0;
+      color: #FFFFFF;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <nav>
-    <a href="index.html">Welcome</a>
-    <a href="login.html">Login</a>
-    <a href="hitparade.html">Hitparade</a>
-    <a href="partner.html">Partners</a>
+    <ul>
+      <li><a href="#willkommen">Willkommen</a></li>
+      <li><a href="#login">Login</a></li>
+      <li><a href="#hitparade">Hitparade</a></li>
+      <li><a href="#werbepartner">Werbepartner</a></li>
+    </ul>
   </nav>
 
-  <header>AI-HITPARADE</header>
+  <header>AI-MUSICWORLD</header>
 
-  <section>
-    <h2>Video</h2>
+  <div class="video-section">
+    <h2>Video Player</h2>
     <video controls>
-      <source src="video/sample-video.mp4" type="video/mp4">
+      <source src="your-video.mp4" type="video/mp4">
+      Your browser does not support the video tag.
     </video>
-    <div class="rating">★ ★ ★ ★ ☆</div>
-    <div class="upload">
-      <input type="file" accept="video/*">
-    </div>
-  </section>
+    <select>
+      <option>Video 1</option>
+      <option>Video 2</option>
+    </select>
+    <button onclick="alert('Danke für deine Bewertung!')">Video Bewerten</button>
+    <input type="file" accept="video/*">
+  </div>
 
-  <section>
-    <h2>Audio</h2>
+  <div class="song-section">
+    <h2>Song Player</h2>
     <audio controls>
-      <source src="audio/sample-song.mp3" type="audio/mp3">
+      <source src="your-song.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
     </audio>
-    <div class="rating">★ ★ ★ ★ ☆</div>
-    <div class="upload">
-      <input type="file" accept="audio/*">
-    </div>
-  </section>
+    <select>
+      <option>Song 1</option>
+      <option>Song 2</option>
+    </select>
+    <button onclick="alert('Danke für deine Bewertung!')">Song Bewerten</button>
+    <input type="file" accept="audio/*">
+  </div>
 
-  <section>
-    <h2>Top Videos und Top Songs</h2>
-    <div class="top10">
-      <div>
-        <h3 style="color:#FF00FF">Top Videos</h3>
-        <div class="scrollbox">
-          <table>
-            <tr><th>#</th><th>Titel</th><th>Sterne</th></tr>
-            <tr><td>1</td><td>Video A</td><td>★★★★★</td></tr>
-            <tr><td>2</td><td>Video B</td><td>★★★★☆</td></tr>
-            <tr><td>3</td><td>Video C</td><td>★★★★☆</td></tr>
-          </table>
+  <div class="hitparade-wrapper">
+    <div class="hitparade">
+      <div class="hitbox">
+        <h3 style="color:#00FFFF;">Top Videos</h3>
+        <div class="hitlist">
+          <ol>
+            <li>Video Titel 1 ⭐⭐⭐⭐☆</li>
+            <li>Video Titel 2 ⭐⭐⭐☆☆</li>
+            <!-- Weitere Einträge -->
+          </ol>
         </div>
       </div>
-      <div>
-        <h3 style="color:#FF00FF">Top Songs</h3>
-        <div class="scrollbox">
-          <table>
-            <tr><th>#</th><th>Titel</th><th>Sterne</th></tr>
-            <tr><td>1</td><td>Song X</td><td>★★★★★</td></tr>
-            <tr><td>2</td><td>Song Y</td><td>★★★★☆</td></tr>
-            <tr><td>3</td><td>Song Z</td><td>★★★☆☆</td></tr>
-          </table>
+      <div class="hitbox">
+        <h3 style="color:#00FFFF;">Top Songs</h3>
+        <div class="hitlist">
+          <ol>
+            <li>Song Titel 1 ⭐⭐⭐⭐⭐</li>
+            <li>Song Titel 2 ⭐⭐⭐⭐☆</li>
+            <!-- Weitere Einträge -->
+          </ol>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+
+  <div class="media-box">
+    <h3>Deine Songs und Deine Videos in den Medien!</h3>
+    <p><a href="#login">"Loge"</a> Dich ein und lade sie kostenlos herauf...</p>
+    <div class="media-logos">
+      <div class="media-logo-placeholder"><img src="images/nrj-logo.png" alt="NRJ Energy Logo"></div>
+      <div class="media-logo-placeholder"><img src="images/srf-logo.png" alt="SRF Logo"></div>
+      <div class="media-logo-placeholder"><img src="images/zuerisee-logo.png" alt="Radio Zürisee Logo"></div>
+      <div class="media-logo-placeholder"><img src="images/couleur3-logo.png" alt="Couleur 3 Logo"></div>
+    </div>
+  </div>
+
+  <footer>
+    AI-MUSICWORLD | AI-HITPARADE.COM
+  </footer>
+
+  <script>
+    console.log('AI-MUSICWORLD Plattform geladen');
+  </script>
+</body>
+</html>
 
   <footer>
     AI-MUSICWORLD | AI-HITPARADE.COM
