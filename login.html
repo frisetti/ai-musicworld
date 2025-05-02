@@ -1,3 +1,118 @@
 <!DOCTYPE html>
-<html lang="de"><head><meta charset="UTF-8"><title>Login</title></head>
-<body style="background:#0A0A0A;color:#FFF;text-align:center;"><h1>Loginseite</h1></body></html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – AI-MUSICWORLD</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0A0A0A;
+      color: #FFFFFF;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(26, 26, 26, 0.95);
+      padding: 10px 0;
+      box-shadow: 0 2px 5px #000;
+      z-index: 1000;
+      text-align: center;
+    }
+    nav a {
+      margin: 0 15px;
+      color: #FF00FF;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      color: #00FFFF;
+    }
+    header {
+      padding: 100px 20px 20px;
+      text-align: center;
+      font-size: 2em;
+      color: #FF00FF;
+    }
+    .login-container {
+      width: 300px;
+      margin: 40px auto;
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00FFFF;
+    }
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00FFFF;
+    }
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    .login-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #FF00FF;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .login-container button:hover {
+      background-color: #cc00cc;
+    }
+    .forgot-password {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .forgot-password a {
+      color: #00FFFF;
+      text-decoration: underline;
+      font-size: 0.9em;
+    }
+    .forgot-password a:hover {
+      color: #FF00FF;
+    }
+    footer {
+      text-align: center;
+      margin: 40px 0 20px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Willkommen</a>
+    <a href="login.html">Login</a>
+    <a href="hitparade.html">Hitparade</a>
+    <a href="partner.html">Werbepartner</a>
+  </nav>
+
+  <header>AI-MUSICWORLD – Login</header>
+
+  <div class="login-container">
+    <h2>Login</h2>
+    <form>
+      <input type="text" placeholder="Benutzername">
+      <input type="password" placeholder="Passwort">
+      <button type="submit">Einloggen</button>
+    </form>
+    <div class="forgot-password">
+      <a href="#">Passwort vergessen?</a>
+    </div>
+  </div>
+
+  <footer>
+    AI-MUSICWORLD | AI-HITPARADE.COM
+  </footer>
+</body>
+</html>
