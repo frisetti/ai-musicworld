@@ -1,22 +1,81 @@
-# AI-MUSICWORLD Webplattform
+# 🎵 AI MUSICWORLD – HITPARADE Plattform / Platform
 
-## Überblick
-AI-MUSICWORLD ist eine Plattform für AI-generierte Rockmusik, bei der Bands Songs neu interpretieren und von Usern bewertet werden. Ziel ist die Darstellung in einer Hitparade – inkl. Weiterleitung an Medienpartner.
+Willkommen beim offiziellen Repository für das Projekt **AI MUSICWORLD HITPARADE**.  
+Welcome to the official repository for the **AI MUSICWORLD HITPARADE** project.
 
-## Projektstruktur
-- `index.html` – Startseite / Willkommen
-- `login.html` – Loginseite mit Zugang für Uploader
-- `register.html` – Benutzerregistrierung
-- `passwort-vergessen.html` – Passwort-Wiederherstellung
-- `partner.html` – Infoseite für Medien- & Werbepartner
+👉 Vorschau / Preview:  
+[https://frisetti.github.io/ai-musicworld/hitparade.html](https://frisetti.github.io/ai-musicworld/hitparade.html)
 
-## Ziel
-Dieses Projekt soll mit Supabase ergänzt werden:
-- Nutzerverwaltung (Registrierung, Login)
-- Datei-Uploads (Video, Audio)
-- Bewertungssystem
-- Speicherung & Anzeige von Hitparade-Resultaten
+---
 
-## Hinweise
-Alle Seiten sind statisch mit HTML + Inline-CSS aufgebaut.
-Supabase kann über eingebettetes JS oder mit einem Framework ergänzt werden.
+## 💡 Projektidee / Project Idea
+
+**Deutsch:**  
+Diese Plattform ermöglicht das Hochladen, Bewerten und Weiterleiten von AI-generierter Musik und Videos.  
+Ziel ist ein Wettbewerb, bei dem die Community über Songs abstimmt und Inhalte an Medien (Radio/TV) weitergeleitet werden.
+
+**English:**  
+This platform allows users to upload, vote on, and forward AI-generated music and videos.  
+The goal is a contest-like system where the community votes and selected content is forwarded to media outlets (radio/TV).
+
+---
+
+## 🔐 Authentifizierung / Authentication
+
+**Deutsch:**  
+Benutzer sollen sich registrieren und anmelden können.  
+Rollen: `admin`, `artist`, `user`
+
+**English:**  
+Users should be able to register and log in.  
+Roles: `admin`, `artist`, `user`
+
+---
+
+## 🗃️ Datenbankstruktur / Database Structure
+
+**Tabellen / Tables:**
+
+| Tabelle / Table      | Beschreibung / Description                          |
+|----------------------|-----------------------------------------------------|
+| `users`              | Benutzerkonten / User accounts                      |
+| `songs`              | AI-generierte Musik/Videos / Uploaded content       |
+| `votes`              | Bewertungen von Nutzern / User votes                |
+| `media_requests`     | Anfragen an Medien / Media forwarding requests      |
+| `comments`           | Kommentare zu Songs / Comments on songs             |
+
+---
+
+### 📊 Diagramm / Diagram
+
+![Datenbankstruktur](https://github.com/frisetti/ai-musicworld/blob/main/diagramm.png?raw=true)
+
+---
+
+## 🚀 MVP Ziele / MVP Goals
+
+**Deutsch:**
+- Login/Registrierung mit Supabase Auth
+- Upload von Audio/Video-Dateien
+- Öffentliche Songliste mit Voting
+- Admin-Panel zur Moderation
+- Export von Medienanfragen
+
+**English:**
+- Login/Signup via Supabase Auth
+- Upload of audio/video content
+- Public song list with voting feature
+- Admin panel for moderation
+- Export of media requests
+
+---
+
+## 🧑‍💻 Entwicklerhinweise / Developer Notes
+
+Wir arbeiten mit externen Entwicklern (z. B. via Fiverr).  
+Vorschläge zur Struktur und Erweiterung sind willkommen.
+
+We are collaborating with external developers (e.g. via Fiverr).  
+Suggestions for structure and improvements are welcome.
+
+---
