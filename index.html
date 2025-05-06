@@ -39,11 +39,30 @@
       margin: 40px auto;
       width: 100%;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+    .video-section button {
+      background-color: #00ffff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 1.2em;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00ffff;
+      transition: background-color 0.3s;
+    }
+    .video-section button:hover {
+      background-color: #00cccc;
     }
     video {
+      display: none;
+      margin-top: 20px;
       width: 90vw;
-      max-width: 700px;
+      max-width: 800px;
+      max-height: 416px;
       border-radius: 10px;
       box-shadow: 0 0 10px #00FFFF;
     }
@@ -75,13 +94,13 @@
     <a href="index.html">Welcome</a>
     <a href="login.html">Login</a>
     <a href="hitparade.html">Hitparade</a>
-    
   </nav>
 
   <header>WELCOME TO AI-MUSICWORLD</header>
 
   <div class="video-section">
-    <video autoplay muted loop>
+    <button onclick="startVideo()" id="startButton">▶ Video starten</button>
+    <video id="introVideo" controls>
       <source src="video/intro.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -99,5 +118,15 @@
   <footer>
     AI-MUSICWORLD | AI-HITPARADE.COM
   </footer>
+
+  <script>
+    function startVideo() {
+      const video = document.getElementById("introVideo");
+      const button = document.getElementById("startButton");
+      button.style.display = "none";
+      video.style.display = "block";
+      video.play();
+    }
+  </script>
 </body>
 </html>
