@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI MUSICWORLD – Mehrsprachiges Manual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Ubuntu', sans-serif;
+      background-color: #111;
+      color: white;
+      padding: 20px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: hotpink;
+      margin: 0 0 10px 0;
+    }
+
+    a {
+      color: hotpink;
+      text-decoration: none;
+    }
+
+    /* Sticky Sprachbuttons */
+    .language-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #111;
+      padding: 12px 0;
+      margin: 10px 0 20px 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .language-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+    }
+
+    .language-buttons button {
+      position: relative;
+      background-color: #222;
+      border: 2px solid hotpink;
+      color: white;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: transform 120ms ease-out, background-color 120ms ease-out, box-shadow 120ms ease-out, border-color 120ms ease-out;
+    }
+
+    .language-buttons button:hover {
+      transform: translateY(-1px);
+    }
+
+    /* ✅ Aktiver Button: klarer + Punkt */
+    .language-buttons button.active {
+      background-color: rgba(255, 105, 180, 0.18);
+      border-color: hotpink;
+      box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.35);
+    }
+
+    .language-buttons button.active::after {
+      content: "";
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: hotpink;
+      border: 2px solid #111;
+      box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.25);
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .highlight {
+      background-color: #222;
+      padding: 10px 20px;
+      border-left: 5px solid hotpink;
+      margin-bottom: 15px;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+
+    /* Fade-Animation für Sprachwechsel */
+    .manual {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .manual.active {
+      display: block;
+      animation: fadeIn 220ms ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Donation / QR Layout */
+    .donation-wrap {
+      margin-top: 10px;
+    }
+
+    .donation-grid {
+      display: grid;
+      grid-template-columns: 1fr; /* bei 600px immer schön untereinander */
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .donation-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .donation-title {
+      font-weight: 700;
+      margin: 0 0 10px 0;
+    }
+
+    .donation-img {
+      width: 180px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid #333;
+    }
+
+    .donation-note {
+      font-size: 0.95em;
+      opacity: 0.9;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
+    .donation-actions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .donation-link {
+      display: inline-block;
+      background: #222;
+      border: 1px solid hotpink;
+      color: white;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.9em;
+    }
+
+    .btc-address {
+      font-family: monospace;
+      font-size: 0.85em;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 8px 10px;
+      word-break: break-all;
+      margin-top: 8px;
+    }
+
+    .copy-btn {
+      margin-top: 8px;
+      background: #222;
+      border: 1px solid hotpink;
+      color: white;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: transform 120ms ease-out, background-color 120ms ease-out;
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* ✅ Elegantes "Copied!" Label (Toast) */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      background: rgba(34, 34, 34, 0.96);
+      border: 1px solid rgba(255, 105, 180, 0.7);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease-out, transform 160ms ease-out;
+      z-index: 9999;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .highlight { padding: 8px 12px; }
+      .language-bar { padding: 10px 0; }
+      .toast { bottom: 12px; font-size: 0.9em; }
+    }
+  </style>
+
+  <script>
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+
+      toast.textContent = message;
+      toast.classList.add('show');
+
+      window.clearTimeout(window.__toastTimer);
+      window.__toastTimer = window.setTimeout(() => {
+        toast.classList.remove('show');
+      }, 1600);
+    }
+
+    function setActiveLanguageButton(lang) {
+      document.querySelectorAll('.language-buttons button').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.querySelector('.language-buttons button[data-lang="' + lang + '"]');
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function showLanguage(lang) {
+      // Content umschalten
+      document.querySelectorAll('.manual').forEach(div => div.classList.remove('active'));
+      const target = document.getElementById(lang);
+      if (target) target.classList.add('active');
+
+      // Aktiven Button markieren
+      setActiveLanguageButton(lang);
+
+      // Sanft nach oben scrollen (zur Überschrift/Buttons)
+      const topTarget = document.getElementById('top');
+      if (topTarget) {
+        topTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function copyBTC(lang) {
+      const addr = 'bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8';
+
+      const messages = {
+        de: 'Bitcoin-Adresse kopiert ✅',
+        fr: 'Adresse Bitcoin copiée ✅',
+        it: 'Indirizzo Bitcoin copiato ✅',
+        en: 'Bitcoin address copied ✅'
+      };
+
+      const msg = messages[lang] || messages.de;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(addr).then(() => {
+          showToast(msg);
+        }).catch(() => {
+          showToast('Copy nicht möglich – bitte manuell markieren.');
+        });
+      } else {
+        showToast('Copy nicht möglich – bitte manuell markieren.');
+      }
+    }
+
+    // Startzustand: DE aktiv
+    window.addEventListener('DOMContentLoaded', () => {
+      setActiveLanguageButton('de');
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container" id="top">
+
+    <h1>🌍 AI MUSICWORLD APP</h1>
+    <a href="https://www.ai-musicworld.com" target="_blank" rel="noopener">www.ai-musicworld.com</a>
+
+    <div class="language-bar">
+      <div class="language-buttons">
+        <button data-lang="de" onclick="showLanguage('de')">🇩🇪 Deutsch</button>
+        <button data-lang="fr" onclick="showLanguage('fr')">🇫🇷 Français</button>
+        <button data-lang="it" onclick="showLanguage('it')">🇮🇹 Italiano</button>
+        <button data-lang="en" onclick="showLanguage('en')">🇬🇧 English</button>
+      </div>
+    </div>
+
+    <!-- DEUTSCH -->
+    <div class="manual active" id="de">
+      <div class="section">
+        <div class="highlight">Bedienungsanleitung und Bezahlungsweise</div>
+
+        <p>Bewerten, Audio hören und Videos anschauen – unsere App ist für dich vollständig kostenlos. Dieses Projekt wird ausschliesslich durch deine Unterstützung ermöglicht.</p>
+        <p>Wenn du uns unterstützen möchtest, scanne einfach den QR-Code und spende via PayPal oder Bitcoin. Herzlichen Dank für deine Hilfe! ❤️</p>
+
+        <div class="donation-wrap">
+          <div class="donation-grid">
+
+            <div class="donation-card">
+              <p class="donation-title">PayPal-Spende</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+                   alt="PayPal Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">QR-Code scannen und Zahlung via PayPal ausführen.</p>
+            </div>
+
+            <div class="donation-card">
+              <p class="donation-title">Bitcoin-Spende</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+                   alt="Bitcoin Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">QR-Code scannen oder Adresse kopieren und Bitcoin senden.</p>
+
+              <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
+              <button class="copy-btn" onclick="copyBTC('de')">Adresse kopieren</button>
+            </div>
+
+          </div>
+
+          <div class="donation-actions">
+            <a class="donation-link"
+               href="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+               target="_blank" rel="noopener">PayPal QR öffnen</a>
+
+            <a class="donation-link"
+               href="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+               target="_blank" rel="noopener">Bitcoin QR öffnen</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🎵 Video &amp; Audio App</div>
+        <p>Entdecken Sie eine kuratierte Auswahl an Musik und Videos für höchste Ansprüche.<br>
+          Erleben Sie Inhalte ohne Werbung, ohne Unterbrechungen und ganz ohne Registrierung.<br>
+          Tauchen Sie ein in eine Welt hochwertiger Erlebnisse, die inspirieren, berühren und begeistern.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">⭐ Bewerten</div>
+        <p>Im Menü „Home“ entdecken Sie Videos und Audios zum Anschauen, Anhören und Bewerten.</p>
+        <p>Klicken Sie auf „Rate this“ und vergeben Sie Sterne – auch halbe Sterne sind möglich.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🏆 Hitparade</div>
+        <p>Unter "Hitparade" finden Sie alle bewerteten Medien in absteigender Reihenfolge.</p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <a href="https://www.ai-musicworld.com">www.ai-musicworld.com</a><br>
+          E-Mail: <a href="mailto:heiner.fries@icloud.com">heiner.fries@icloud.com</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- FRANÇAIS -->
+    <div class="manual" id="fr">
+      <div class="section">
+        <div class="highlight">Manuel d'utilisation et paiement</div>
+
+        <p>Évaluez, écoutez de l’audio et regardez des vidéos dans notre application — entièrement gratuitement. Ce projet est rendu possible uniquement grâce à votre soutien.</p>
+        <p>Si vous souhaitez contribuer, scannez simplement le code QR et faites un don via PayPal ou Bitcoin. Merci de faire vivre ce projet ! ❤️</p>
+
+        <div class="donation-wrap">
+          <div class="donation-grid">
+
+            <div class="donation-card">
+              <p class="donation-title">Don PayPal</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+                   alt="PayPal Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scannez le code QR et effectuez le paiement via PayPal.</p>
+            </div>
+
+            <div class="donation-card">
+              <p class="donation-title">Don Bitcoin</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+                   alt="Bitcoin Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scannez le code QR ou copiez l’adresse et envoyez des bitcoins.</p>
+
+              <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
+              <button class="copy-btn" onclick="copyBTC('fr')">Copier l’adresse</button>
+            </div>
+
+          </div>
+
+          <div class="donation-actions">
+            <a class="donation-link"
+               href="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+               target="_blank" rel="noopener">Ouvrir QR PayPal</a>
+
+            <a class="donation-link"
+               href="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+               target="_blank" rel="noopener">Ouvrir QR Bitcoin</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🎵 Application Vidéo &amp; Audio</div>
+        <p>Découvrez une sélection soigneusement choisie de musiques et de vidéos, pensée pour les amateurs exigeants.<br>
+          Profitez d’une expérience fluide, sans publicité, sans interruption et sans inscription.<br>
+          Plongez dans un univers de contenus de haute qualité, conçus pour éveiller et inspirer vos sens.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">⭐ Évaluer</div>
+        <p>Dans le menu « Home », découvrez des vidéos et des contenus audio à regarder, écouter et évaluer.</p>
+        <p>Cliquez sur « Rate this » et attribuez des étoiles — les demi-étoiles sont également possibles.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🏆 Hitparade</div>
+        <p>Vous trouvez tous les médias évalué sous "Hitparade", classés par ordre décroissant.</p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <a href="https://www.ai-musicworld.com">www.ai-musicworld.com</a><br>
+          <a href="mailto:heiner.fries@icloud.com">heiner.fries@icloud.com</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- ITALIANO -->
+    <div class="manual" id="it">
+      <div class="section">
+        <div class="highlight">Manuale e pagamento</div>
+
+        <p>Valuta, ascolta audio e guarda video nella nostra app — completamente gratuita. Questo progetto è reso possibile esclusivamente grazie al tuo supporto.</p>
+        <p>Se desideri contribuire, scansiona il QR code e dona tramite PayPal o Bitcoin. Grazie di cuore per il tuo sostegno! ❤️</p>
+
+        <div class="donation-wrap">
+          <div class="donation-grid">
+
+            <div class="donation-card">
+              <p class="donation-title">Donazione PayPal</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+                   alt="PayPal Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scansiona il QR code ed effettua il pagamento via PayPal.</p>
+            </div>
+
+            <div class="donation-card">
+              <p class="donation-title">Donazione Bitcoin</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+                   alt="Bitcoin Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scansiona il QR code oppure copia l’indirizzo e invia Bitcoin.</p>
+
+              <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
+              <button class="copy-btn" onclick="copyBTC('it')">Copia indirizzo</button>
+            </div>
+
+          </div>
+
+          <div class="donation-actions">
+            <a class="donation-link"
+               href="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+               target="_blank" rel="noopener">Apri QR PayPal</a>
+
+            <a class="donation-link"
+               href="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+               target="_blank" rel="noopener">Apri QR Bitcoin</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🎵 App Video &amp; Audio</div>
+        <p>Scopri una selezione curata di musica e video, pensata per utenti esigenti.<br>
+          Vivi un’esperienza fluida, senza pubblicità, senza interruzioni e senza bisogno di registrazione.<br>
+          Immergiti in un mondo di contenuti di alta qualità, creati per emozionare e ispirare.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">
+          ⭐ <strong>Valutazione</strong>
+          <div style="font-weight: normal;">
+            Nel menu “Home” puoi scoprire video e contenuti audio da guardare, ascoltare e valutare.
+            <br>
+            Clicca su “Rate this” e assegna le stelle — sono disponibili anche le mezze stelle.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🏆 Hitparade</div>
+        <p>Trovi tutti i contenuti valutati nel menu "Hitparade", ordinati per punteggio decrescente.</p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <a href="https://www.ai-musicworld.com">www.ai-musicworld.com</a><br>
+          <a href="mailto:heiner.fries@icloud.com">heiner.fries@icloud.com</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- ENGLISH -->
+    <div class="manual" id="en">
+      <div class="section">
+        <div class="highlight">User Guide &amp; Payment</div>
+
+        <p>Enjoy rating, listening to audio, and watching videos in our app — completely free of charge. This project is made possible entirely through your support.</p>
+        <p>If you’d like to contribute, scan the QR code and donate via PayPal or Bitcoin. Thank you for helping us keep this project alive! ❤️</p>
+
+        <div class="donation-wrap">
+          <div class="donation-grid">
+
+            <div class="donation-card">
+              <p class="donation-title">PayPal Donation</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+                   alt="PayPal Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scan the QR code and complete the payment via PayPal.</p>
+            </div>
+
+            <div class="donation-card">
+              <p class="donation-title">Bitcoin Donation</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+                   alt="Bitcoin Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scan the QR code or copy the address and send Bitcoin.</p>
+
+              <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
+              <button class="copy-btn" onclick="copyBTC('en')">Copy address</button>
+            </div>
+
+          </div>
+
+          <div class="donation-actions">
+            <a class="donation-link"
+               href="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+               target="_blank" rel="noopener">Open PayPal QR</a>
+
+            <a class="donation-link"
+               href="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+               target="_blank" rel="noopener">Open Bitcoin QR</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🎵 Video &amp; Audio App</div>
+        <p>Discover a curated selection of music and videos designed for discerning listeners.<br>
+          Enjoy a seamless experience with no ads, no interruptions, and no registration required.<br>
+          Immerse yourself in a world of high-quality content created to inspire and excite your senses.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">⭐ Rating</div>
+        <p>In the “Home” menu, discover videos and audio content to watch, listen to, and rate.</p>
+        <p>Click on “Rate this” and assign stars — half-star ratings are also available.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🏆 Hit Parade</div>
+        <p>All rated media appears in the "Hitparade" section, sorted by rating.</p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <a href="https://www.ai-musicworld.com">www.ai-musicworld.com</a><br>
+          <a href="mailto:heiner.fries@icloud.com">heiner.fries@icloud.com</a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ✅ Toast-Element (für "Copied!" etc.) -->
+  <div id="toast" class="toast" aria-live="polite"></div>
+</body>
+</html>
