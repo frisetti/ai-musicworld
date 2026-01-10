@@ -66,7 +66,7 @@
       transform: translateY(-1px);
     }
 
-    /* ✅ Aktiver Button: klarer + Punkt */
+    /* Aktiver Button */
     .language-buttons button.active {
       background-color: rgba(255, 105, 180, 0.18);
       border-color: hotpink;
@@ -105,7 +105,7 @@
       opacity: 0.9;
     }
 
-    /* Fade-Animation für Sprachwechsel */
+    /* Fade */
     .manual {
       display: none;
       opacity: 0;
@@ -122,14 +122,12 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Donation / QR Layout */
-    .donation-wrap {
-      margin-top: 10px;
-    }
+    /* Donation */
+    .donation-wrap { margin-top: 10px; }
 
     .donation-grid {
       display: grid;
-      grid-template-columns: 1fr; /* bei 600px immer schön untereinander */
+      grid-template-columns: 1fr;
       gap: 16px;
       margin-top: 12px;
     }
@@ -162,23 +160,6 @@
       line-height: 1.4;
     }
 
-    .donation-actions {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .donation-link {
-      display: inline-block;
-      background: #222;
-      border: 1px solid hotpink;
-      color: white;
-      padding: 8px 10px;
-      border-radius: 10px;
-      font-size: 0.9em;
-    }
-
     .btc-address {
       font-family: monospace;
       font-size: 0.85em;
@@ -202,11 +183,9 @@
       transition: transform 120ms ease-out, background-color 120ms ease-out;
     }
 
-    .copy-btn:hover {
-      transform: translateY(-1px);
-    }
+    .copy-btn:hover { transform: translateY(-1px); }
 
-    /* ✅ Elegantes "Copied!" Label (Toast) */
+    /* Toast */
     .toast {
       position: fixed;
       left: 50%;
@@ -260,47 +239,72 @@
     }
 
     function showLanguage(lang) {
-      // Content umschalten
       document.querySelectorAll('.manual').forEach(div => div.classList.remove('active'));
       const target = document.getElementById(lang);
       if (target) target.classList.add('active');
 
-      // Aktiven Button markieren
       setActiveLanguageButton(lang);
 
-      // Sanft nach oben scrollen (zur Überschrift/Buttons)
       const topTarget = document.getElementById('top');
-      if (topTarget) {
-        topTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (topTarget) topTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function copyTextRobust(text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (e) {}
+
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        ta.style.top = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e) {
+        return false;
       }
     }
 
-    function copyBTC(lang) {
+    async function copyBTC(btn, lang) {
       const addr = 'bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8';
 
-      const messages = {
-        de: 'Bitcoin-Adresse kopiert ✅',
-        fr: 'Adresse Bitcoin copiée ✅',
-        it: 'Indirizzo Bitcoin copiato ✅',
-        en: 'Bitcoin address copied ✅'
+      const ui = {
+        de: { ok: 'Bitcoin-Adresse kopiert ✅', copied: 'Kopiert!', back: 'Adresse kopieren', fail: 'Kopieren nicht möglich – bitte manuell markieren.' },
+        fr: { ok: 'Adresse Bitcoin copiée ✅',  copied: 'Copié !',   back: 'Copier l’adresse', fail: 'Copie impossible — veuillez copier manuellement.' },
+        it: { ok: 'Indirizzo Bitcoin copiato ✅', copied: 'Copiato!', back: 'Copia indirizzo', fail: 'Copia non disponibile — copia manualmente.' },
+        en: { ok: 'Bitcoin address copied ✅',    copied: 'Copied!',  back: 'Copy address',    fail: 'Copy not available — please copy manually.' }
       };
 
-      const msg = messages[lang] || messages.de;
+      const t = ui[lang] || ui.de;
+      const ok = await copyTextRobust(addr);
 
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(addr).then(() => {
-          showToast(msg);
-        }).catch(() => {
-          showToast('Copy nicht möglich – bitte manuell markieren.');
-        });
+      if (ok) {
+        showToast(t.ok);
+        if (btn) {
+          btn.textContent = t.copied;
+          btn.disabled = true;
+          window.clearTimeout(btn.__btnTimer);
+          btn.__btnTimer = window.setTimeout(() => {
+            btn.textContent = t.back;
+            btn.disabled = false;
+          }, 1600);
+        }
       } else {
-        showToast('Copy nicht möglich – bitte manuell markieren.');
+        showToast(t.fail);
       }
     }
 
-    // Startzustand: DE aktiv
     window.addEventListener('DOMContentLoaded', () => {
       setActiveLanguageButton('de');
     });
@@ -326,13 +330,12 @@
     <div class="manual active" id="de">
       <div class="section">
         <div class="highlight">Bedienungsanleitung und Bezahlungsweise</div>
-<p>Erleben Sie Inhalte ohne Werbung, ohne Unterbrechungen und ganz ohne Registrierung.</p>         
+        <p>Erleben Sie Inhalte ohne Werbung, ohne Unterbrechungen und ganz ohne Registrierung.</p>
         <p>Bewerten, Audio hören und Videos anschauen – unsere App ist für dich vollständig kostenlos. Dieses Projekt wird ausschliesslich durch deine Unterstützung ermöglicht.</p>
         <p>Wenn du uns unterstützen möchtest, scanne einfach den QR-Code und spende via PayPal oder Bitcoin. Herzlichen Dank für deine Hilfe! ❤️</p>
 
         <div class="donation-wrap">
           <div class="donation-grid">
-
             <div class="donation-card">
               <p class="donation-title">PayPal-Spende</p>
               <img class="donation-img"
@@ -351,27 +354,24 @@
               <p class="donation-note">QR-Code scannen oder Adresse kopieren und Bitcoin senden.</p>
 
               <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
-              <button class="copy-btn" onclick="copyBTC('de')">Adresse kopieren</button>
+              <button class="copy-btn" onclick="copyBTC(this,'de')">Adresse kopieren</button>
             </div>
-
           </div>
-        
         </div>
       </div>
 
       <div class="section">
         <div class="highlight">🎵 Video &amp; Audio App</div>
-       <p>
-AI MUSICWORLD ist mehr als eine Plattform.<br>
-Es ist das Ergebnis einer langen musikalischen Reise – verwurzelt im Rock, geprägt von klassischer Musik und offen für neue Technologien.<br><br>
-Unterstützt durch moderne KI-Tools bleibt <strong>henry+</strong> seiner musikalischen DNA treu:
-<strong>Echte Emotion. Echter Rock.</strong>
-Neu interpretiert mit digitaler Kraft.<br><br>
-Das Ziel:
-<strong>Classical-Rock-Alben, inspiriert von den grossen Komponisten vergangener Jahrhunderte</strong>,
-neu gedacht für unsere Zeit.
-</p>
-
+        <p>
+          AI MUSICWORLD ist mehr als eine Plattform.<br>
+          Es ist das Ergebnis einer langen musikalischen Reise – verwurzelt im Rock, geprägt von klassischer Musik und offen für neue Technologien.<br><br>
+          Unterstützt durch moderne KI-Tools bleibt <strong>henry+</strong> seiner musikalischen DNA treu:
+          <strong>Echte Emotion. Echter Rock.</strong>
+          Neu interpretiert mit digitaler Kraft.<br><br>
+          Das Ziel:
+          <strong>Classical-Rock-Alben, inspiriert von den grossen Komponisten vergangener Jahrhunderte</strong>,
+          neu gedacht für unsere Zeit.
+        </p>
       </div>
 
       <div class="section">
@@ -397,13 +397,12 @@ neu gedacht für unsere Zeit.
     <div class="manual" id="fr">
       <div class="section">
         <div class="highlight">Manuel d'utilisation et paiement</div>
-<p>Profitez d’une expérience fluide, sans publicité, sans interruption et sans inscription.</p>
+        <p>Profitez d’une expérience fluide, sans publicité, sans interruption et sans inscription.</p>
         <p>Évaluez, écoutez de l’audio et regardez des vidéos dans notre application — entièrement gratuitement. Ce projet est rendu possible uniquement grâce à votre soutien.</p>
         <p>Si vous souhaitez contribuer, scannez simplement le code QR et faites un don via PayPal ou Bitcoin. Merci de faire vivre ce projet ! ❤️</p>
 
         <div class="donation-wrap">
           <div class="donation-grid">
-
             <div class="donation-card">
               <p class="donation-title">Don PayPal</p>
               <img class="donation-img"
@@ -422,27 +421,25 @@ neu gedacht für unsere Zeit.
               <p class="donation-note">Scannez le code QR ou copiez l’adresse et envoyez des bitcoins.</p>
 
               <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
-              <button class="copy-btn" onclick="copyBTC('fr')">Copier l’adresse</button>
+              <button class="copy-btn" onclick="copyBTC(this,'fr')">Copier l’adresse</button>
             </div>
-
           </div>
-
-                 </div>
+        </div>
       </div>
 
       <div class="section">
         <div class="highlight">🎵 Application Vidéo &amp; Audio</div>
-      <p>
-AI MUSICWORLD est bien plus qu’une plateforme.<br>
-<p>C’est le résultat d’un long parcours musical – enraciné dans le rock, nourri par la musique classique et ouvert aux nouvelles technologies.<p/><br>
-Soutenu par des outils d’IA modernes, <strong>henry+</strong> reste fidèle à son ADN musical :
-<strong>Émotion authentique. Rock authentique.</strong>
-Réinterprété avec une force numérique nouvelle.<br><br>
-L’objectif :
-<strong>des albums de classical rock inspirés des grands compositeurs des siècles passés</strong>,
-repensés pour notre époque.
-</p>
-
+        <p>
+          AI MUSICWORLD est bien plus qu’une plateforme.<br>
+          C’est le résultat d’un long parcours musical – enraciné dans le rock, nourri par la musique classique et ouvert aux nouvelles technologies.<br><br>
+          Soutenu par des outils d’IA modernes, <strong>henry+</strong> reste fidèle à son ADN musical :
+          <strong>Émotion authentique. Rock authentique.</strong>
+          Réinterprété avec une force numérique nouvelle.<br><br>
+          L’objectif :
+          <strong>des albums de classical rock inspirés des grands compositeurs des siècles passés</strong>,
+          repensés pour notre époque.
+        </p>
+      </div>
 
       <div class="section">
         <div class="highlight">⭐ Évaluer</div>
@@ -467,12 +464,12 @@ repensés pour notre époque.
     <div class="manual" id="it">
       <div class="section">
         <div class="highlight">Manuale e pagamento</div>
-<p>Vivi contenuti senza pubblicità, senza interruzioni e senza bisogno di registrazione.</p>  
+        <p>Vivi contenuti senza pubblicità, senza interruzioni e senza bisogno di registrazione.</p>
         <p>Valuta, ascolta audio e guarda video nella nostra app — completamente gratuita. Questo progetto è reso possibile esclusivamente grazie al tuo supporto.</p>
         <p>Se desideri contribuire, scansiona il QR code e dona tramite PayPal o Bitcoin. Grazie di cuore per il tuo sostegno! ❤️</p>
+
         <div class="donation-wrap">
           <div class="donation-grid">
-
             <div class="donation-card">
               <p class="donation-title">Donazione PayPal</p>
               <img class="donation-img"
@@ -491,37 +488,30 @@ repensés pour notre époque.
               <p class="donation-note">Scansiona il QR code oppure copia l’indirizzo e invia Bitcoin.</p>
 
               <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
-              <button class="copy-btn" onclick="copyBTC('it')">Copia indirizzo</button>
+              <button class="copy-btn" onclick="copyBTC(this,'it')">Copia indirizzo</button>
             </div>
-
           </div>
-
-                 </div>
+        </div>
       </div>
 
       <div class="section">
         <div class="highlight">🎵 App Video &amp; Audio</div>
-       <p>
-AI MUSICWORLD è molto più di una piattaforma.<br>
-È il risultato di un lungo percorso musicale – radicato nel rock, influenzato dalla musica classica e aperto alle nuove tecnologie.<br><br>
-Supportato da moderni strumenti di intelligenza artificiale, <strong>henry+</strong> rimane fedele al proprio DNA musicale:
-<strong>Emozione autentica. Rock autentico.</strong>
-Reinterpretato con una nuova forza digitale.<br><br>
-L’obiettivo:
-<strong>album di classical rock ispirati ai grandi compositori dei secoli passati</strong>,
-ripensati per il nostro tempo.
-</p>
+        <p>
+          AI MUSICWORLD è molto più di una piattaforma.<br>
+          È il risultato di un lungo percorso musicale – radicato nel rock, influenzato dalla musica classica e aperto alle nuove tecnologie.<br><br>
+          Supportato da moderni strumenti di intelligenza artificiale, <strong>henry+</strong> rimane fedele al proprio DNA musicale:
+          <strong>Emozione autentica. Rock autentico.</strong>
+          Reinterpretato con una nuova forza digitale.<br><br>
+          L’obiettivo:
+          <strong>album di classical rock ispirati ai grandi compositori dei secoli passati</strong>,
+          ripensati per il nostro tempo.
+        </p>
       </div>
 
       <div class="section">
-        <div class="highlight">
-          ⭐ <strong>Valutazione</strong>
-          <div style="font-weight: normal;">
-            Nel menu “Home” puoi scoprire video e contenuti audio da guardare, ascoltare e valutare.
-            <br>
-            Clicca su “Rate this” e assegna le stelle — sono disponibili anche le mezze stelle.
-          </div>
-        </div>
+        <div class="highlight">⭐ <strong>Valutazione</strong></div>
+        <p>Nel menu “Home” puoi scoprire video e contenuti audio da guardare, ascoltare e valutare.</p>
+        <p>Clicca su “Rate this” e assegna le stelle — sono disponibili anche le mezze stelle.</p>
       </div>
 
       <div class="section">
@@ -541,13 +531,12 @@ ripensati per il nostro tempo.
     <div class="manual" id="en">
       <div class="section">
         <div class="highlight">User Guide &amp; Payment</div>
- <p>Enjoy a seamless experience with no ads, no interruptions, and no registration required.<br>
+        <p>Enjoy a seamless experience with no ads, no interruptions, and no registration required.</p>
         <p>Enjoy rating, listening to audio, and watching videos in our app — completely free of charge. This project is made possible entirely through your support.</p>
         <p>If you’d like to contribute, scan the QR code and donate via PayPal or Bitcoin. Thank you for helping us keep this project alive! ❤️</p>
 
         <div class="donation-wrap">
           <div class="donation-grid">
-
             <div class="donation-card">
               <p class="donation-title">PayPal Donation</p>
               <img class="donation-img"
@@ -566,27 +555,25 @@ ripensati per il nostro tempo.
               <p class="donation-note">Scan the QR code or copy the address and send Bitcoin.</p>
 
               <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
-              <button class="copy-btn" onclick="copyBTC('en')">Copy address</button>
+              <button class="copy-btn" onclick="copyBTC(this,'en')">Copy address</button>
             </div>
-
           </div>
-
-                 </div>
+        </div>
       </div>
 
       <div class="section">
         <div class="highlight">🎵 Video &amp; Audio App</div>
-      <p>
-AI MUSICWORLD is more than a platform.<br>
-It is the result of a long musical journey — rooted in rock, shaped by classical music, and open to new technologies.<br><br>
-Supported by modern AI tools, <strong>henry+</strong> stays true to his musical DNA:
-<strong>Real emotion. Real rock.</strong>
-Reimagined with digital power.<br><br>
-The goal:
-<strong>classical rock albums inspired by the great composers of past centuries</strong>,
-rethought for our time.
-</p>
-
+        <p>
+          AI MUSICWORLD is more than a platform.<br>
+          It is the result of a long musical journey — rooted in rock, shaped by classical music, and open to new technologies.<br><br>
+          Supported by modern AI tools, <strong>henry+</strong> stays true to his musical DNA:
+          <strong>Real emotion. Real rock.</strong>
+          Reimagined with digital power.<br><br>
+          The goal:
+          <strong>classical rock albums inspired by the great composers of past centuries</strong>,
+          rethought for our time.
+        </p>
+      </div>
 
       <div class="section">
         <div class="highlight">⭐ Rating</div>
@@ -609,11 +596,6 @@ rethought for our time.
 
   </div>
 
-  <!-- ✅ Toast-Element (für "Copied!" etc.) -->
   <div id="toast" class="toast" aria-live="polite"></div>
 </body>
 </html>
-
-
-
-
