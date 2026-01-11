@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI MUSICWORLD – Mehrsprachiges Manual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Ubuntu', sans-serif;
+      background-color: #111;
+      color: white;
+      padding: 20px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: hotpink;
+      margin: 0 0 10px 0;
+    }
+
+    a {
+      color: hotpink;
+      text-decoration: none;
+    }
+
+    /* Sticky Sprachbuttons */
+    .language-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #111;
+      padding: 12px 0;
+      margin: 10px 0 20px 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .language-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+    }
+
+    .language-buttons button {
+      position: relative;
+      background-color: #222;
+      border: 2px solid hotpink;
+      color: white;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: transform 120ms ease-out, background-color 120ms ease-out, box-shadow 120ms ease-out, border-color 120ms ease-out;
+    }
+
+    .language-buttons button:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Aktiver Button */
+    .language-buttons button.active {
+      background-color: rgba(255, 105, 180, 0.18);
+      border-color: hotpink;
+      box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.35);
+    }
+
+    .language-buttons button.active::after {
+      content: "";
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: hotpink;
+      border: 2px solid #111;
+      box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.25);
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .highlight {
+      background-color: #222;
+      padding: 10px 20px;
+      border-left: 5px solid hotpink;
+      margin-bottom: 15px;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+
+    /* Fade */
+    .manual {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .manual.active {
+      display: block;
+      animation: fadeIn 220ms ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Donation */
+    .donation-wrap { margin-top: 10px; }
+
+    .donation-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .donation-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .donation-title {
+      font-weight: 700;
+      margin: 0 0 10px 0;
+    }
+
+    .donation-img {
+      width: 180px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid #333;
+    }
+
+    .donation-note {
+      font-size: 0.95em;
+      opacity: 0.9;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
+    .btc-address {
+      font-family: monospace;
+      font-size: 0.85em;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 8px 10px;
+      word-break: break-all;
+      margin-top: 8px;
+    }
+
+    .copy-btn {
+      margin-top: 8px;
+      background: #222;
+      border: 1px solid hotpink;
+      color: white;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: transform 120ms ease-out, background-color 120ms ease-out;
+    }
+
+    .copy-btn:hover { transform: translateY(-1px); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      background: rgba(34, 34, 34, 0.96);
+      border: 1px solid rgba(255, 105, 180, 0.7);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease-out, transform 160ms ease-out;
+      z-index: 9999;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .highlight { padding: 8px 12px; }
+      .language-bar { padding: 10px 0; }
+      .toast { bottom: 12px; font-size: 0.9em; }
+    }
+  </style>
+
+  <script>
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+
+      toast.textContent = message;
+      toast.classList.add('show');
+
+      window.clearTimeout(window.__toastTimer);
+      window.__toastTimer = window.setTimeout(() => {
+        toast.classList.remove('show');
+      }, 1600);
+    }
+
+    function setActiveLanguageButton(lang) {
+      document.querySelectorAll('.language-buttons button').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.querySelector('.language-buttons button[data-lang="' + lang + '"]');
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function showLanguage(lang) {
+      document.querySelectorAll('.manual').forEach(div => div.classList.remove('active'));
+      const target = document.getElementById(lang);
+      if (target) target.classList.add('active');
+
+      setActiveLanguageButton(lang);
+
+      const topTarget = document.getElementById('top');
+      if (topTarget) topTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function copyTextRobust(text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (e) {}
+
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        ta.style.top = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function copyBTC(btn, lang) {
+      const addr = 'bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8';
+
+      const ui = {
+        de: { ok: 'Bitcoin-Adresse kopiert ✅', copied: 'Kopiert!', back: 'Adresse kopieren', fail: 'Kopieren nicht möglich – bitte manuell markieren.' },
+        fr: { ok: 'Adresse Bitcoin copiée ✅',  copied: 'Copié !',   back: 'Copier l’adresse', fail: 'Copie impossible — veuillez copier manuellement.' },
+        it: { ok: 'Indirizzo Bitcoin copiato ✅', copied: 'Copiato!', back: 'Copia indirizzo', fail: 'Copia non disponibile — copia manualmente.' },
+        en: { ok: 'Bitcoin address copied ✅',    copied: 'Copied!',  back: 'Copy address',    fail: 'Copy not available — please copy manually.' }
+      };
+
+      const t = ui[lang] || ui.de;
+      const ok = await copyTextRobust(addr);
+
+      if (ok) {
+        showToast(t.ok);
+        if (btn) {
+          btn.textContent = t.copied;
+          btn.disabled = true;
+          window.clearTimeout(btn.__btnTimer);
+          btn.__btnTimer = window.setTimeout(() => {
+            btn.textContent = t.back;
+            btn.disabled = false;
+          }, 1600);
+        }
+      } else {
+        showToast(t.fail);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setActiveLanguageButton('de');
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container" id="top">
+
+    <h1>🌍 AI MUSICWORLD APP</h1>
+    <a href="https://www.ai-musicworld.com" target="_blank" rel="noopener">www.ai-musicworld.com</a>
+
+    <div class="language-bar">
+      <div class="language-buttons">
+        <button data-lang="de" onclick="showLanguage('de')">🇩🇪 Deutsch</button>
+        <button data-lang="fr" onclick="showLanguage('fr')">🇫🇷 Français</button>
+        <button data-lang="it" onclick="showLanguage('it')">🇮🇹 Italiano</button>
+        <button data-lang="en" onclick="showLanguage('en')">🇬🇧 English</button>
+      </div>
+    </div>
+
+    <!-- DEUTSCH -->
+    <div class="manual active" id="de">
+      <div class="section">
+        <div class="highlight">Bedienungsanleitung und Bezahlungsweise</div>
+        <p>Erleben Sie Inhalte ohne Werbung, ohne Unterbrechungen und ganz ohne Registrierung.</p>
+        <p>Bewerten, Audio hören und Videos anschauen – unsere App ist für Sie vollständig kostenlos. Dieses Projekt wird ausschliesslich durch Ihre Unterstützung ermöglicht.</p>
+        <p>Wenn Sie uns unterstützen möchten, scannen einfach den QR-Code und spenden Sie via PayPal oder Bitcoin. Herzlichen Dank für Ihre Hilfe! ❤️</p>
+
+        <div class="donation-wrap">
+          <div class="donation-grid">
+            <div class="donation-card">
+              <p class="donation-title">PayPal-Spende</p>
+              <a href="https://www.paypal.com/ncp/payment/KKTNX8M38NGRA"
+   target="_blank" rel="noopener">
+  <img class="donation-img"
+       src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+       alt="PayPal Donation QR Code"
+       loading="lazy" decoding="async">
+</a>
+
+<p class="donation-note">
+  QR-Code scannen <strong>oder tippen/klicken</strong> und Spende via PayPal ausführen.
+</p>
+
+<p>
+  <a href="https://www.paypal.com/ncp/payment/KKTNX8M38NGRA"
+     target="_blank" rel="noopener">
+    👉 PayPal-Spendenlink öffnen
+  </a>
+</p>
+
+            </div>
+
+            <div class="donation-card">
+              <p class="donation-title">Bitcoin-Spende</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+                   alt="Bitcoin Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">QR-Code scannen oder Adresse kopieren und Bitcoin senden.</p>
+
+              <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
+              <button class="copy-btn" onclick="copyBTC(this,'de')">Adresse kopieren</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🎵 Video &amp; Audio App</div>
+        <p>
+          AI MUSICWORLD ist mehr als eine Plattform.<br>
+          Es ist das Ergebnis einer langen musikalischen Reise – verwurzelt im Rock, geprägt von klassischer Musik und offen für neue Technologien.<br><br>
+          Unterstützt durch moderne KI-Tools bleibt <strong>henry+</strong> seiner musikalischen DNA treu:
+          <strong>Echte Emotion. Echter Rock.</strong>
+          Neu interpretiert mit digitaler Kraft.<br><br>
+          Das Ziel:
+          <strong>Classical-Rock-Alben, inspiriert von den grossen Komponisten vergangener Jahrhunderte</strong>,
+          neu gedacht für unsere Zeit.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">⭐ Bewerten</div>
+        <p>Im Menü „Home“ entdecken Sie Videos und Audios zum Anschauen, Anhören und Bewerten.</p>
+        <p>Klicken Sie auf „Rate this“ und vergeben Sie Sterne – auch halbe Sterne sind möglich.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🏆 Hitparade</div>
+        <p>Unter "Hitparade" finden Sie alle bewerteten Medien in absteigender Reihenfolge.</p>
+      </div>
+
+      <!-- NEU: Album Links (DE) -->
+      <div class="section">
+        <div class="highlight">🔗 Album Links</div>
+        <p>
+          Klicken Sie hier auf den Album Link des <strong>„Mozart Albums“</strong> und Sie erhalten die Möglichkeit,
+          sämtliche bereits veröffentlichten Classical-Rock Alben anzuhören und herunter zu laden.
+        </p>
+        <p>
+          <a href="https://urlify.to/henry-plus-ai-musicworld-vii-mozart-reimagined-the-classical-rock-opera"
+             target="_blank" rel="noopener">
+            👉 Mozart Album – Link öffnen
+          </a>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <a href="https://www.ai-musicworld.com">www.ai-musicworld.com</a><br>
+          E-Mail: <a href="mailto:heiner.fries@icloud.com">heiner.fries@icloud.com</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- FRANÇAIS -->
+    <div class="manual" id="fr">
+      <div class="section">
+        <div class="highlight">Manuel d'utilisation et paiement</div>
+        <p>Profitez d’une expérience fluide, sans publicité, sans interruption et sans inscription.</p>
+        <p>Évaluez, écoutez de l’audio et regardez des vidéos dans notre application — entièrement gratuitement. Ce projet est rendu possible uniquement grâce à votre soutien.</p>
+        <p>Si vous souhaitez contribuer, scannez simplement le code QR et faites un don via PayPal ou Bitcoin. Merci de faire vivre ce projet ! ❤️</p>
+
+        <div class="donation-wrap">
+          <div class="donation-grid">
+            <div class="donation-card">
+              <p class="donation-title">Don PayPal</p>
+              <a href="https://www.paypal.com/ncp/payment/KKTNX8M38NGRA" target="_blank" rel="noopener">
+  <img class="donation-img"
+       src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+       alt="PayPal Donation QR Code"
+       loading="lazy" decoding="async">
+</a>
+<p class="donation-note">
+  Scannez le QR code <strong>ou touchez/cliquez</strong> pour ouvrir PayPal.
+</p>
+<p>
+  <a href="https://www.paypal.com/ncp/payment/KKTNX8M38NGRA" target="_blank" rel="noopener">
+    👉 Ouvrir le lien de don PayPal
+  </a>
+</p>
+
+            </div>
+
+            <div class="donation-card">
+              <p class="donation-title">Don Bitcoin</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+                   alt="Bitcoin Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scannez le code QR ou copiez l’adresse et envoyez des bitcoins.</p>
+
+              <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
+              <button class="copy-btn" onclick="copyBTC(this,'fr')">Copier l’adresse</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🎵 Application Vidéo &amp; Audio</div>
+        <p>
+          AI MUSICWORLD est bien plus qu’une plateforme.<br>
+          C’est le résultat d’un long parcours musical – enraciné dans le rock, nourri par la musique classique et ouvert aux nouvelles technologies.<br><br>
+          Soutenu par des outils d’IA modernes, <strong>henry+</strong> reste fidèle à son ADN musical :
+          <strong>Émotion authentique. Rock authentique.</strong>
+          Réinterprété avec une force numérique nouvelle.<br><br>
+          L’objectif :
+          <strong>des albums de classical rock inspirés des grands compositeurs des siècles passés</strong>,
+          repensés pour notre époque.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">⭐ Évaluer</div>
+        <p>Dans le menu « Home », découvrez des vidéos et des contenus audio à regarder, écouter et évaluer.</p>
+        <p>Cliquez sur « Rate this » et attribuez des étoiles — les demi-étoiles sont également possibles.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🏆 Hitparade</div>
+        <p>Vous trouvez tous les médias évalué sous "Hitparade", classés par ordre décroissant.</p>
+      </div>
+
+      <!-- NEU: Album Links (FR) -->
+      <div class="section">
+        <div class="highlight">🔗 Liens d’albums</div>
+        <p>
+          Cliquez ici sur le lien de l’album <strong>« Mozart »</strong> : vous pourrez écouter et télécharger
+          tous les albums Classical-Rock déjà publiés.
+        </p>
+        <p>
+          <a href="https://urlify.to/henry-plus-ai-musicworld-vii-mozart-reimagined-the-classical-rock-opera"
+             target="_blank" rel="noopener">
+            👉 Ouvrir le lien – Album Mozart
+          </a>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <a href="https://www.ai-musicworld.com">www.ai-musicworld.com</a><br>
+          <a href="mailto:heiner.fries@icloud.com">heiner.fries@icloud.com</a>
+        </p>
+      </div>
+    </div>
+
+       <!-- ITALIANO -->
+    <div class="manual" id="it">
+      <div class="section">
+        <div class="highlight">Manuale e pagamento</div>
+        <p>Vivi contenuti senza pubblicità, senza interruzioni e senza bisogno di registrazione.</p>
+        <p>Valuta, ascolta audio e guarda video nella nostra app — completamente gratuita. Questo progetto è reso possibile esclusivamente grazie al tuo supporto.</p>
+        <p>Se desideri contribuire, scansiona il QR code e dona tramite PayPal o Bitcoin. Grazie di cuore per il tuo sostegno! ❤️</p>
+
+        <div class="donation-wrap">
+          <div class="donation-grid">
+            <div class="donation-card">
+              <p class="donation-title">Donazione PayPal</p>
+              <a href="https://www.paypal.com/ncp/payment/KKTNX8M38NGRA" target="_blank" rel="noopener">
+  <img class="donation-img"
+       src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+       alt="PayPal Donation QR Code"
+       loading="lazy" decoding="async">
+</a>
+<p class="donation-note">
+  Scansiona il QR code <strong>oppure tocca/clicca</strong> per aprire PayPal.
+</p>
+<p>
+  <a href="https://www.paypal.com/ncp/payment/KKTNX8M38NGRA" target="_blank" rel="noopener">
+    👉 Apri link donazione PayPal
+  </a>
+</p>
+
+            </div>
+
+            <div class="donation-card">
+              <p class="donation-title">Donazione Bitcoin</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+                   alt="Bitcoin Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scansiona il QR code oppure copia l’indirizzo e invia Bitcoin.</p>
+
+              <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
+              <button class="copy-btn" onclick="copyBTC(this,'it')">Copia indirizzo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🎵 App Video &amp; Audio</div>
+        <p>
+          AI MUSICWORLD è molto più di una piattaforma.<br>
+          È il risultato di un lungo percorso musicale – radicato nel rock, influenzato dalla musica classica e aperto alle nuove tecnologie.<br><br>
+          Supportato da moderni strumenti di intelligenza artificiale, <strong>henry+</strong> rimane fedele al proprio DNA musicale:
+          <strong>Emozione autentica. Rock autentico.</strong>
+          Reinterpretato con una nuova forza digitale.<br><br>
+          L’obiettivo:
+          <strong>album di classical rock ispirati ai grandi compositori dei secoli passati</strong>,
+          ripensati per il nostro tempo.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">⭐ Valutazione</div>
+        <p>Nel menu “Home” puoi scoprire video e contenuti audio da guardare, ascoltare e valutare.</p>
+        <p>Clicca su “Rate this” e assegna le stelle — sono disponibili anche le mezze stelle.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🏆 Hitparade</div>
+        <p>Trovi tutti i contenuti valutati nel menu "Hitparade", ordinati per punteggio decrescente.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🔗 Link Album</div>
+        <p>
+          Clicca qui sul link dell’album <strong>“Mozart”</strong> e avrai la possibilità di ascoltare e scaricare
+          tutti gli album Classical-Rock già pubblicati.
+        </p>
+        <p>
+          <a href="https://urlify.to/henry-plus-ai-musicworld-vii-mozart-reimagined-the-classical-rock-opera"
+             target="_blank" rel="noopener">
+            👉 Apri link – Album Mozart
+          </a>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <a href="https://www.ai-musicworld.com">www.ai-musicworld.com</a><br>
+          <a href="mailto:heiner.fries@icloud.com">heiner.fries@icloud.com</a>
+        </p>
+      </div>
+    </div>
+    <!-- /ITALIANO -->
+
+    <!-- ENGLISH -->
+    <div class="manual" id="en">
+      <div class="section">
+        <div class="highlight">User Guide &amp; Payment</div>
+        <p>Enjoy a seamless experience with no ads, no interruptions, and no registration required.</p>
+        <p>Enjoy rating, listening to audio, and watching videos in our app — completely free of charge. This project is made possible entirely through your support.</p>
+        <p>If you’d like to contribute, scan the QR code and donate via PayPal or Bitcoin. Thank you for helping us keep this project alive! ❤️</p>
+
+        <div class="donation-wrap">
+          <div class="donation-grid">
+            <div class="donation-card">
+              <p class="donation-title">PayPal Donation</p>
+             <a href="https://www.paypal.com/ncp/payment/KKTNX8M38NGRA" target="_blank" rel="noopener">
+  <img class="donation-img"
+       src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/PAYPALDONATION.png"
+       alt="PayPal Donation QR Code"
+       loading="lazy" decoding="async">
+</a>
+<p class="donation-note">
+  Scan the QR code <strong>or tap/click</strong> to open PayPal.
+</p>
+<p>
+  <a href="https://www.paypal.com/ncp/payment/KKTNX8M38NGRA" target="_blank" rel="noopener">
+    👉 Open PayPal donation link
+  </a>
+</p>
+
+            </div>
+
+            <div class="donation-card">
+              <p class="donation-title">Bitcoin Donation</p>
+              <img class="donation-img"
+                   src="https://raw.githubusercontent.com/frisetti/ai-musicworld/main/BitcoinDonation.jpg"
+                   alt="Bitcoin Donation QR Code"
+                   loading="lazy" decoding="async">
+              <p class="donation-note">Scan the QR code or copy the address and send Bitcoin.</p>
+
+              <div class="btc-address">bc1qhpxknhez35c9qpxuez3p2vemj5yl6lkxf5lsw8</div>
+              <button class="copy-btn" onclick="copyBTC(this,'en')">Copy address</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🎵 Video &amp; Audio App</div>
+        <p>
+          AI MUSICWORLD is more than a platform.<br>
+          It is the result of a long musical journey — rooted in rock, shaped by classical music, and open to new technologies.<br><br>
+          Supported by modern AI tools, <strong>henry+</strong> stays true to his musical DNA:
+          <strong>Real emotion. Real rock.</strong>
+          Reimagined with digital power.<br><br>
+          The goal:
+          <strong>classical rock albums inspired by the great composers of past centuries</strong>,
+          rethought for our time.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">⭐ Rating</div>
+        <p>In the “Home” menu, discover videos and audio content to watch, listen to, and rate.</p>
+        <p>Click on “Rate this” and assign stars — half-star ratings are also available.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🏆 Hit Parade</div>
+        <p>All rated media appears in the "Hitparade" section, sorted by rating.</p>
+      </div>
+
+      <div class="section">
+        <div class="highlight">🔗 Album Links</div>
+        <p>
+          Click the <strong>“Mozart Album”</strong> link to access all published Classical-Rock albums —
+          available to listen to and download.
+        </p>
+        <p>
+          <a href="https://urlify.to/henry-plus-ai-musicworld-vii-mozart-reimagined-the-classical-rock-opera"
+             target="_blank" rel="noopener">
+            👉 Open link – Mozart Album
+          </a>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          <a href="https://www.ai-musicworld.com">www.ai-musicworld.com</a><br>
+          <a href="mailto:heiner.fries@icloud.com">heiner.fries@icloud.com</a>
+        </p>
+      </div>
+    </div>
+    <!-- /ENGLISH -->
+</div>
+</body></html>
